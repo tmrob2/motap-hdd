@@ -2,7 +2,7 @@
 name = "scpm"
 version = "0.1.0"
 edition = "2021"
-authors = ["Thomas Robinson"]
+authors = ["Thomas Robinson <tmr463@uowmail.edu.au>"]
 description = "A multi-objective task allocation software in multiple agent systems"
 readme = "README.md"
 

@@ -130,6 +130,14 @@ Testing if CSSparse was installed correctly can be done after the project has be
 To install Rust follow the instructions and pre-requisites at goto https://www.rust-lang.org/learn/get-started. Usually 
 this is as simple as running the listed command in your terminal. 
 
+#### Gurobi
+Certain calculations for computing vectors to approximate a Pareto curve rely on a good linear programming 
+software. Gurobi is used as the LP solver in this package. Gurobi is a subscription based software but
+can also be used under an academic license. 
+
+Download an install Gurobi Optimizer at https://www.gurobi.com/downloads/. Once installed
+the Rust Gurobi wrapper crate of this project will automatically bind to this.
+
 ### Installation
 
 Installation of the MOTAP tool itself is simple. Once this repository is cloned you can run 
