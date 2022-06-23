@@ -22,10 +22,7 @@
 <h3 align="center">Multi-objective Task Allocation and Planning (MOTAP)</h3>
 
   <p align="center">
-    Considers the simultaneous task allocation planning of multiagent systems. This project is an API 
-    targetting very large state spaces, possible millions of states, which do not fit into memory. Agents
-    consist of constructing an Markov decision process (MDP) environment, and tasks consist of 
-    deterministic finite automata (DFA) which correspond to co-safe linear temporal logic (LTL). 
+    Considers the simultaneous task allocation planning of multiagent systems. 
     <br />
     <a href="https://github.com/tmrob2/motap-hdd"><strong>Explore the docs »</strong></a>
     <br />
@@ -71,24 +68,21 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `tmrob2`, `motap-hdd`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
-
+This project is an API implemented in Rust v1.5 targetting very large state spaces, possible millions 
+of states, which do not fit into memory. Agents consist of constructing an Markov decision process (MDP) 
+environment, and tasks consist of deterministic finite automata (DFA) which correspond to co-safe linear 
+temporal logic (LTL). Examples and details on how to install the project dependencies are expained below. 
+The project is suffixed with hdd because it stores partitions of a problem state-space on the hard-disk.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
 ### Built With
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+* [Rust v1.61](https://www.rust-lang.org/)
+* [SuiteSparse - CXSparse v5.8](https://github.com/DrTimothyAldenDavis/SuiteSparse)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -97,8 +91,8 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+The MOTAP-hdd solver uses a sparse linear algebra library written in C called CXSparse. A small FFI C 
+wrapper is pre-built for this library in src/c_bindings/
 
 ### Prerequisites
 
