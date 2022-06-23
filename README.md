@@ -70,11 +70,15 @@
 
 <!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
 
-This project is an API implemented in Rust v1.5 targetting very large state spaces, possible millions 
-of states, which do not fit into memory. Agents consist of constructing an Markov decision process (MDP) 
-environment, and tasks consist of deterministic finite automata (DFA) which correspond to co-safe linear 
+This project is a <span style="text-decoration: underline">prototype</span> API implemented in Rust v1.5 targetting very large state spaces, possible millions 
+of states, which do not fit into memory.
+Agents consist of constructing an Markov decision process (MDP) environment, and tasks consist of deterministic finite automata (DFA) which correspond to co-safe linear 
 temporal logic (LTL). Examples and details on how to install the project dependencies are expained below. 
 The project is suffixed with hdd because it stores partitions of a problem state-space on the hard-disk.
+This project is a part of work into efficient improvements in centralised task allocation in 
+multiagent systems.
+
+Developed for Linux.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -82,7 +86,7 @@ The project is suffixed with hdd because it stores partitions of a problem state
 ### Built With
 
 * [Rust v1.61](https://www.rust-lang.org/)
-* [SuiteSparse - CXSparse v5.8](https://github.com/DrTimothyAldenDavis/SuiteSparse)
+* [SuiteSparse - CXSparse v5.11](https://github.com/DrTimothyAldenDavis/SuiteSparse/CXSparse)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -92,35 +96,50 @@ The project is suffixed with hdd because it stores partitions of a problem state
 ## Getting Started
 
 The MOTAP-hdd solver uses a sparse linear algebra library written in C called CXSparse. A small FFI C 
-wrapper is pre-built for this library in src/c_bindings/
+wrapper is pre-built for this library in src/c_binding/suite_sparse.rs. Only the library dependencies
+will need to be configured in build.rs. Installing a Sparse linear algebra library can be a bit tricky
+but it by far produces the best results for model solving speed.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+#### SparseSuite CXSparse v5.11 - Installation
+
+First clone the SuiteSparse project from https://github.com/DrTimothyAldenDavis/SuiteSparse.
+To install CXSparse, first edit 
+```
+SuiteSparse/SuiteSparse_config/SuiteSparse_config.mk
+```
+with your required configuration settings. This will include a library link to your favourite BLAS instance
+but Intel MKL is recommended for SuiteSparse.
+
+There are a lot of different Sparse computation methods in this project, but the only one we require is CXSparse.
+Check your current configuration using the following in the root directory of SuiteSparse. The main thing required
+is a dependency to a BLAS library. 
+```sh
+make config
+```
+If MKLROOT is detected this will be the BLAS implementation, otherwise specify the shared library for BLAS with -lblas. 
+Goto the suitsparse directory and install with 
+```shell
+make 
+make install # constructs shared libraries which our build.rs script will connect to. 
+```
+Testing if CSSparse was installed correctly can be done after the project has been built.
+
+#### Rust v1.61 - Installation
+To install Rust follow the instructions and pre-requisites at goto https://www.rust-lang.org/learn/get-started. Usually 
+this is as simple as running the listed command in your terminal. 
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/tmrob2/motap-hdd.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+Installation of the MOTAP tool itself is simple. Once this repository is cloned you can run 
+```sh
+cargo build
+``` 
+This may take a few minutes to compile the first time as a CBLAS instance will need to be installed. This is 
+automatically configured for your system.  
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -168,7 +187,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the Apache-2.0 License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
