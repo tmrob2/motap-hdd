@@ -8,21 +8,24 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 -->
-[![Issues][issues-shield]][https://github.com/tmrob2/motap-hdd/issues]
-[![Apache License][license-shield]][https://github.com/tmrob2/motap-hdd/LICENSE]
+[![Issues][issues-shield]][issues-url]
+[![Apache License][license-shield]][license-url]
 
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/tmrob2/motap-hdd">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <!--<img src="images/logo.png" alt="Logo" width="80" height="80">-->
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">Multi-objective Task Allocation and Planning (MOTAP)</h3>
 
   <p align="center">
-    project_description
+    Considers the simultaneous task allocation planning of multiagent systems. This project is an API 
+    targetting very large state spaces, possible millions of states, which do not fit into memory. Agents
+    consist of constructing an Markov decision process (MDP) environment, and tasks consist of 
+    deterministic finite automata (DFA) which correspond to co-safe linear temporal logic (LTL). 
     <br />
     <a href="https://github.com/tmrob2/motap-hdd"><strong>Explore the docs »</strong></a>
     <br />
