@@ -3,7 +3,6 @@
 extern crate blis_src;
 extern crate cblas_sys;
 
-pub mod scpm;
 pub mod utils;
 pub mod algorithm;
 pub mod c_binding;
@@ -16,8 +15,8 @@ use std::hash::Hash;
 use std::collections::HashMap;
 use std::fs;
 use std::io::BufWriter;
-use cblas_sys::{cblas_dcopy, cblas_dscal, cblas_ddot, cblas_dgemv};
 use c_binding::suite_sparse::*;
+use cblas_sys::{cblas_dcopy, cblas_dscal, cblas_ddot, cblas_dgemv, cblas_daxpy};
 use serde::{Serialize, Deserialize};
 use hashbrown::HashMap as FastHM;
 use crate::utils::number_fmts::read_f64_from_file;
@@ -78,7 +77,7 @@ pub fn spalloc(m: i32, n: i32, nzmax: i32, values: i32, t: i32) -> *mut cs_di {
 #[allow(non_snake_case)]
 pub fn add_vecs(x: &[f64], y: &mut [f64], ns: i32, alpha: f64) {
     unsafe {
-        cblas_sys::cblas_daxpy(ns, alpha, x.as_ptr(), 1, y.as_mut_ptr(), 1);
+        cblas_daxpy(ns, alpha, x.as_ptr(), 1, y.as_mut_ptr(), 1);
     }
 }
 
