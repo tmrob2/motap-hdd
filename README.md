@@ -130,6 +130,9 @@ Testing if CSSparse was installed correctly can be done after the project has be
 To install Rust follow the instructions and pre-requisites at goto https://www.rust-lang.org/learn/get-started. Usually 
 this is as simple as running the listed command in your terminal. 
 
+Also required is Cargo the Rust package manager. There are other ways of compiling Rust projects but
+Cargo is by far the easiest.
+
 #### Gurobi
 Certain calculations for computing vectors to approximate a Pareto curve rely on a good linear programming 
 software. Gurobi is used as the LP solver in this package. Gurobi is a subscription based software but
