@@ -3,7 +3,6 @@ use hashbrown::{HashSet as FastSet};
 
 pub type Tfunc2 = dyn Fn(&i32, &str, i32) -> Option<i32>;
 
-// todo we might actually not need the sinks
 #[allow(non_snake_case)]
 #[derive(Debug, PartialEq)]
 pub struct Sink{
@@ -138,22 +137,17 @@ impl<F, W, T> DFA2<F, W, T> where F: Fn(&Data<W, T>) -> i32, W: Clone + Default,
     pub fn sink(&mut self, alphabet: Vec<W>, info: Option<T>) {
         let finished = self.accepting.to_vec();
         let rejecting = self.rejecting.to_vec();
-        //println!("accepting: {:?}, rejecting: {:?}", self.accepting, self.rejecting);
         for q in rejecting {
             self.set_done(q);
         }
-        //println!("dones before sink loop: {:?}", self.done);
         for q in finished.iter() {
-            //println!("finished: {}", q);
             for w in alphabet.iter().cloned() {
                 let input = match info.as_ref() {
                     Some(x) => Some(x.clone()),
                     None => None
                 };
                 let qprime: i32 = (self.tfunc)(&Data{q: *q, w, info: input});
-                //println!("q': {}", qprime);
                 self.set_done(qprime);
-                //println!("dones: {:?}", self.done);
             }
         }
     }

@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+extern crate blis_src;
 extern crate cblas_sys;
 
 pub mod scpm;
