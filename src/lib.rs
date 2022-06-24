@@ -3,6 +3,7 @@
 extern crate blis_src;
 extern crate cblas_sys;
 
+pub mod scpm;
 pub mod utils;
 pub mod algorithm;
 pub mod c_binding;
