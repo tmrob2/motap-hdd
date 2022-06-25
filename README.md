@@ -27,7 +27,7 @@
     <a href="https://github.com/tmrob2/motap-hdd"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/tmrob2/motap-hdd">View Demo</a>
+    <a href="https://github.com/tmrob2/rusty-robots">View Demo</a>
     ·
     <a href="https://github.com/tmrob2/motap-hdd/issues">Report Bug</a>
     ·
@@ -155,9 +155,7 @@ automatically configured for your system.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+An example implementation on how to use this crate can be found at https://github.com/tmrob2/rusty-robots.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
