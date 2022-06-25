@@ -1,5 +1,6 @@
 use hashbrown::{HashMap as FastHM, HashSet as FastSet};
 use std::collections::HashMap;
+use std::env::VarError;
 use std::fs;
 use rand::{prelude::{SliceRandom, IteratorRandom}, thread_rng};
 use serde::{Serialize, Deserialize};
@@ -140,32 +141,63 @@ impl SCPM {
         na: usize,
         nt: usize
     ) -> Self {
-        let pth = format!("{}/rewards", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let scpm_home = match std::env::var("SCPM_HOME") {
+            Ok(var) => {var}
+            Err(_) => { panic!("No ENV variable named $SCPM_HOME. Add env variable before continuing. See docs for more information.")}
+        };
+        let pth = format!("{}/rewards", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => {}
+            Err(_) => { println!("No dir named rewards in $SCPM_HOME.")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/transitions", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/transitions", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => {println!("No dir named transitions in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/schedulers", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/schedulers", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => { println!("No dir named schedulers in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/mappings", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/mappings", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => { println!("No dir named mappings in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/graph", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/graph", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => { println!("No dir named graph in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/switches", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/switches", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => { println!("No dir named switches in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/data/solutions", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/data/solutions", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => { println!("No dir named data/solutions in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/data/metadata", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/data/metadata", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => { println!("No dir named data/metadata in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
-        let pth = format!("{}/data/robot", std::env::var("SCPM_HOME").unwrap());
-        fs::remove_dir_all(pth.as_str()).unwrap();
+        let pth = format!("{}/data/robot", scpm_home);
+        match fs::remove_dir_all(pth.as_str()) {
+            Ok(_) => { }
+            Err(_) => { println!("No dir named data/robot in $SCPM_HOME")}
+        };
         fs::create_dir_all(pth.as_str()).unwrap();
         let scpm = SCPM {
             mdps: Vec::new(), // The SCPM takes ownership of the MDPs at this point
