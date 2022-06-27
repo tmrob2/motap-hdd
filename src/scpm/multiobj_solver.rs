@@ -45,10 +45,8 @@ impl MultiObjSolver for SCPM {
             // Construct a weight matrix in a way that numpy can interpret which is Vec<Vec<f64>>
             let mut qp_w_input: Vec<Vec<f64>> = Vec::new();
             let mut qp_x_input: Vec<Vec<f64>> = Vec::new();
-            for k in 0..weights.len() {
-                qp_w_input.push(weights.get(&k).unwrap().to_vec());
-                qp_x_input.push(hullset.get(&k).unwrap().to_vec());
-            }
+            qp_w_input.push(w.to_vec());
+            qp_x_input.push(r.to_vec());
             let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
                 let qp = PyModule::from_code(py, code, "", "")?;
                 let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
