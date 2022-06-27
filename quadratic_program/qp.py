@@ -11,7 +11,7 @@ def quadprog_wrapper(W, X, l):
     print(W)
     h = np.array([np.dot(np.array(W[i]), np.array(X[i])) for i in range(0, l)])
     P = np.eye(l)
-    q = np.array([0] * l)
+    q = np.array([0.] * l)
     return quadprog_solve_qp(P, q, np.array(W), h)
 
 
