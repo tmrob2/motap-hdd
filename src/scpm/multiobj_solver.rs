@@ -122,7 +122,7 @@ impl MultiObjSolver for SCPM {
                     // the polytope
                     // compute the nearest point from the target vector which achieves allows the
                     // algorithm to continue
-                    let code = include_str!(concat!(env!("CARGO_MANIFEST_DIR")),"/quadratic_program/qp.py");
+                    let code = include_str!(concat!(env!("CARGO_MANIFEST_DIR"),"/quadratic_program/qp.py"));
                     // Construct a weight matrix in a way that numpy can interpret which is Vec<Vec<f64>>
                     let mut qp_w_input: Vec<Vec<f64>> = Vec::new();
                     let mut qp_x_input: Vec<Vec<f64>> = Vec::new();
