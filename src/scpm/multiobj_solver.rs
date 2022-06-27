@@ -104,6 +104,25 @@ impl MultiObjSolver for SCPM {
                             println!("w.r_l = {:.3}, w.t = {:.3}, wrl < wt: {}", wrl, wt, wrl < wt);
                             if wrl < wt {
                                 println!("Ran in t(s): {:?}", t1.elapsed().as_secs_f64());
+                                // compute the nearest point from the target vector which achieves allows the
+                                // algorithm to continue
+                                pyo3::prepare_freethreaded_python();
+                                let code = include_str!(concat!(env!("CARGO_MANIFEST_DIR"),"/quadratic_program/qp.py"));
+                                // Construct a weight matrix in a way that numpy can interpret which is Vec<Vec<f64>>
+                                let mut qp_w_input: Vec<Vec<f64>> = Vec::new();
+                                let mut qp_x_input: Vec<Vec<f64>> = Vec::new();
+                                for k in 0..weights.len() {
+                                    qp_w_input.push(weights.get(&k).unwrap().to_vec());
+                                    qp_x_input.push(hullset.get(&k).unwrap().to_vec());
+                                }
+                                Python::with_gil(|py| -> PyResult<()> {
+                                    let qp = PyModule::from_code(py, code, "", "")?;
+                                    let result: Vec<f64> = qp.getattr("quaqprog_wrapper")?
+                                        .call1((qp_w_input, qp_x_input,))?
+                                        .extract()?;
+                                    println!("new z: {:?}", result);
+                                    Ok(())
+                                });
                                 return (schedulers, hullset)
                             }
                             // Insert the new solution
@@ -120,24 +139,6 @@ impl MultiObjSolver for SCPM {
                     println!("infeasible");
                     // the LP has finished and there are no more points which can be added to the
                     // the polytope
-                    // compute the nearest point from the target vector which achieves allows the
-                    // algorithm to continue
-                    let code = include_str!(concat!(env!("CARGO_MANIFEST_DIR"),"/quadratic_program/qp.py"));
-                    // Construct a weight matrix in a way that numpy can interpret which is Vec<Vec<f64>>
-                    let mut qp_w_input: Vec<Vec<f64>> = Vec::new();
-                    let mut qp_x_input: Vec<Vec<f64>> = Vec::new();
-                    for k in 0..weights.len() {
-                        qp_w_input.push(weights.get(&k).unwrap().to_vec());
-                        qp_x_input.push(hullset.get(&k).unwrap().to_vec());
-                    }
-                    Python::with_gil(|py| -> PyResult<()> {
-                        let qp = PyModule::from_code(py, code, "", "")?;
-                        let result: Vec<f64> = qp.getattr("quaqprog_wrapper")?
-                            .call1((qp_w_input, qp_x_input,))?
-                            .extract()?;
-                        println!("new z: {:?}", result);
-                        Ok(())
-                    });
                     lpvalid = false;
                 }
             }
