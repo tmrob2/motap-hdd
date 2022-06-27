@@ -137,7 +137,7 @@ impl MultiObjSolver for SCPM {
                             .extract()?;
                         println!("new z: {:?}", result);
                         Ok(())
-                    })?;
+                    });
                     lpvalid = false;
                 }
             }
