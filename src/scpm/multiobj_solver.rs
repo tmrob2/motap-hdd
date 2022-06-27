@@ -49,14 +49,14 @@ impl MultiObjSolver for SCPM {
                 qp_w_input.push(weights.get(&k).unwrap().to_vec());
                 qp_x_input.push(hullset.get(&k).unwrap().to_vec());
             }
-            Python::with_gil(|py| -> PyResult<()> {
+            let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
                 let qp = PyModule::from_code(py, code, "", "")?;
                 let result: Vec<f64> = qp.getattr("quaqprog_wrapper")?
                     .call1((qp_w_input, qp_x_input,))?
                     .extract()?;
-                println!("new z: {:?}\n", result);
-                Ok(())
+                Ok(result)
             });
+            println!("tnew: {:?}\n", tnew);
             return (schedulers, hullset)
         }
         X.insert(r.iter()
