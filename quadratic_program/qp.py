@@ -8,10 +8,10 @@ def quadprog_wrapper(W, X, l):
     :param l: length of the current hullset
     """
     # construct a vector of component wise w.r
-    h = [np.dot(np.array(W[i]), np.array(X[i])) for i in range(0, l)]
+    h = np.array([np.dot(np.array(W[i]), np.array(X[i])) for i in range(0, l)])
     P = np.eye(l)
     q = np.array([0] * l)
-    return quadprog_solve_qp(P, q, W, h)
+    return quadprog_solve_qp(P, q, np.array(W), h)
 
 
 def quadprog_solve_qp(P, q, G=None, h=None, A=None, b=None):
