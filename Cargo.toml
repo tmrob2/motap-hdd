@@ -25,6 +25,7 @@ threadpool = "1.8.1"
 byteorder = "1.4.3"
 rayon = "1.5.3"
 glob = "0.3.0"
+pyo3 = "0.16.5"
 
 [build-dependencies]
 bindgen = "0.59.2"

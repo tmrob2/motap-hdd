@@ -6,6 +6,7 @@ use hashbrown::{HashMap as FastHM, HashSet as FastSet, HashSet};
 use indicatif::{ProgressBar, ProgressStyle};
 use rand::prelude::SliceRandom;
 use rand::thread_rng;
+use pyo3::prelude::*;
 use crate::algorithm::motap_solver::{IMOVISolver, MergeState, MultiObjSolver};
 use crate::{COO, deconstruct, sparse_to_cs, SparseMatrixComponents, transpose, blas_dot_product};
 use crate::scpm::definition::{SCPM, SwitchMappings, SwitchTypeCache, TaskAgentStateActionPair};
@@ -119,6 +120,24 @@ impl MultiObjSolver for SCPM {
                     println!("infeasible");
                     // the LP has finished and there are no more points which can be added to the
                     // the polytope
+                    // compute the nearest point from the target vector which achieves allows the
+                    // algorithm to continue
+                    let code = include_str!("/home/tmrob2/warehouse_project/point_convex_hull_experiments.py");
+                    // Construct a weight matrix in a way that numpy can interpret which is Vec<Vec<f64>>
+                    let mut qp_w_input: Vec<Vec<f64>> = Vec::new();
+                    let mut qp_x_input: Vec<Vec<f64>> = Vec::new();
+                    for k in 0..weights.len() {
+                        qp_w_input.push(weights.get(&k).unwrap().to_vec());
+                        qp_x_input.push(hullset.get(&k).unwrap().to_vec());
+                    }
+                    Python::with_gil(|py| -> PyResult<()> {
+                        let qp = PyModule::from_code(py, code, "", "")?;
+                        let result: Vec<f64> = qp.getattr("quaqprog_wrapper")?
+                            .call1((qp_w_input, qp_x_input,))?
+                            .extract()?;
+                        println!("new z: {:?}", result);
+                        Ok(())
+                    })?;
                     lpvalid = false;
                 }
             }
