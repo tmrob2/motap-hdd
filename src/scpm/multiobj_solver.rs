@@ -103,7 +103,8 @@ impl MultiObjSolver for SCPM {
                             }
                             println!("w.r_l = {:.3}, w.t = {:.3}, wrl < wt: {}", wrl, wt, wrl < wt);
                             if wrl < wt {
-                                println!("Ran in t(s): {:?}", t1.elapsed().as_secs_f64());
+                                println!("Computing new point tnew\n");
+                                println!("Ran in t(s): {:?}\n", t1.elapsed().as_secs_f64());
                                 // compute the nearest point from the target vector which achieves allows the
                                 // algorithm to continue
                                 pyo3::prepare_freethreaded_python();
