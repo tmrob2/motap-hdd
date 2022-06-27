@@ -54,7 +54,7 @@ impl MultiObjSolver for SCPM {
                 let result: Vec<f64> = qp.getattr("quaqprog_wrapper")?
                     .call1((qp_w_input, qp_x_input,))?
                     .extract()?;
-                println!("new z: {:?}", result);
+                println!("new z: {:?}\n", result);
                 Ok(())
             });
             return (schedulers, hullset)
