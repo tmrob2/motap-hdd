@@ -129,7 +129,7 @@ impl MultiObjSolver for SCPM {
                                     &w[..], (2 * na) as i32);
 
                             let wrl = blas_dot_product(&r[..], &w[..]);
-                            let wt = blas_dot_product(&t[..], &w[..]);
+                            let wt = blas_dot_product(&tnew[..], &w[..]);
                             if w.len() <= 10 {
                                 println!("w: {:3.3?},\nr: {:.1?}", w, r);
                             }
@@ -152,20 +152,27 @@ impl MultiObjSolver for SCPM {
                                 qp_x_input.push(r.to_vec()); // push the newly found expected cost
                                 let mut target_min: Vec<f64> = vec![0.; tot_objs];
                                 for i in 0..self.num_agents {
-                                    target_min[i] = t[i] - cost_step;
+                                    target_min[i] = tnew[i] - cost_step;
                                 }
                                 for j in self.num_agents..tot_objs {
-                                    target_min[j] = t[j] - prob_step;
+                                    target_min[j] = tnew[j] - prob_step;
                                 }
                                 let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
                                     let qp = PyModule::from_code(py, code, "", "")?;
                                     let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
-                                        .call1((qp_w_input, qp_x_input, weights.len() + 1, tot_objs, t.to_vec(), target_min.to_vec()))?
+                                        .call1((qp_w_input, qp_x_input, weights.len() + 1, tot_objs, tnew.to_vec(), target_min.to_vec()))?
                                         .extract()?;
                                     Ok(result)
                                 });
-                                println!("tnew: {:?}\n", tnew);
-                                return (schedulers, hullset)
+                                match tnew {
+                                    Ok(_) => {
+                                        tnew_found = true;
+                                        println!("solution found");
+                                        println!("tnew: {:.2?}\n", tnew);
+                                    }
+                                    Err(_) => { println!("Unable to find solution based on min step"); }
+                                }
+                                //return (schedulers, hullset)
                             }
                             // Insert the new solution
                             schedulers.push(mu);
