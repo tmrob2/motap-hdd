@@ -67,9 +67,9 @@ impl MultiObjSolver for SCPM {
                     Ok(_) => {
                         tnew_found = true;
                         println!("solution found");
-                        println!("tnew: {:?}\n", tnew);
+                        println!("tnew: {:.2?}\n", tnew);
                     }
-                    Err(_) => { println!("tnew: {:?}\n", tnew); }
+                    Err(_) => { println!("Unable to find solution based on min step"); }
                 }
             }
             //return (schedulers, hullset)
