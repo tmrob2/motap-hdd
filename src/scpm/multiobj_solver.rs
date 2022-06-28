@@ -150,27 +150,30 @@ impl MultiObjSolver for SCPM {
                                 }
                                 qp_w_input.push(w.to_vec()); // push the newly found weight
                                 qp_x_input.push(r.to_vec()); // push the newly found expected cost
-                                let mut target_min: Vec<f64> = vec![0.; tot_objs];
-                                for i in 0..self.num_agents {
-                                    target_min[i] = tnew[i] - cost_step;
-                                }
-                                for j in self.num_agents..tot_objs {
-                                    target_min[j] = tnew[j] - prob_step;
-                                }
-                                let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
-                                    let qp = PyModule::from_code(py, code, "", "")?;
-                                    let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
-                                        .call1((qp_w_input, qp_x_input, weights.len() + 1, tot_objs, tnew.to_vec(), target_min.to_vec()))?
-                                        .extract()?;
-                                    Ok(result)
-                                });
-                                match tnew {
-                                    Ok(_) => {
-                                        tnew_found = true;
-                                        println!("solution found");
-                                        println!("tnew: {:.2?}\n", tnew);
+                                let mut tnew_found = false;
+                                while !tnew_found {
+                                    let mut target_min: Vec<f64> = vec![0.; tot_objs];
+                                    for i in 0..self.num_agents {
+                                        target_min[i] = tnew[i] - cost_step;
                                     }
-                                    Err(_) => { println!("Unable to find solution based on min step"); }
+                                    for j in self.num_agents..tot_objs {
+                                        target_min[j] = tnew[j] - prob_step;
+                                    }
+                                    let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
+                                        let qp = PyModule::from_code(py, code, "", "")?;
+                                        let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
+                                            .call1((qp_w_input, qp_x_input, weights.len() + 1, tot_objs, tnew.to_vec(), target_min.to_vec()))?
+                                            .extract()?;
+                                        Ok(result)
+                                    });
+                                    match tnew {
+                                        Ok(_) => {
+                                            tnew_found = true;
+                                            println!("solution found");
+                                            println!("tnew: {:.2?}\n", tnew);
+                                        }
+                                        Err(_) => { println!("Unable to find solution based on min step"); }
+                                    }
                                 }
                                 //return (schedulers, hullset)
                             }
