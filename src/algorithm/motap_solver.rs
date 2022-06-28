@@ -51,7 +51,7 @@ pub trait MultiObjSolver {
         t: &[f64],
         cost_step: f64,
         prob_step: f64
-    ) -> (Vec<FastHM<(i32, i32), Vec<f64>>>, FastHM<usize, Vec<f64>>);
+    ) -> (Vec<FastHM<(i32, i32), Vec<f64>>>, FastHM<usize, Vec<f64>>, Vec<f64>);
 
     fn merge_schedulers_hdd2(
         simple_schedulers: &[FastHM<(i32, i32), Vec<f64>>],

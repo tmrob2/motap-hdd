@@ -16,7 +16,7 @@ use crate::utils::number_fmts::val_or_zero_one;
 
 impl MultiObjSolver for SCPM {
     fn imovi_hdd_multi_object_solver(&self, eps: f64, t: &[f64], cost_step: f64, prob_step: f64)
-        -> (Vec<FastHM<(i32, i32), Vec<f64>>>, FastHM<usize, Vec<f64>>) {
+        -> (Vec<FastHM<(i32, i32), Vec<f64>>>, FastHM<usize, Vec<f64>>, Vec<f64>) {
         let t1 = Instant::now();
         let mut tnew = t.to_vec();
         let mut hullset: FastHM<usize, Vec<f64>> = FastHM::new();
@@ -202,7 +202,7 @@ impl MultiObjSolver for SCPM {
         }
         println!("Ran in t(s): {:?}", t1.elapsed().as_secs_f64());
 
-        (schedulers, hullset)
+        (schedulers, hullset, tnew)
     }
 
     fn merge_schedulers_hdd2(
