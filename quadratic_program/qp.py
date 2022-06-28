@@ -12,7 +12,7 @@ def quadprog_wrapper(W, X, l, n, t, min_vals):
     # construct a vector of component wise w.r
     h = np.array([np.dot(np.array(W[i]), np.array(X[i])) for i in range(0, l)])
     P = np.eye(n)
-    q = -np.transpose(np.eye(n)) * np.array(t)
+    q = -np.dot(np.transpose(np.eye(n)), np.array(t))
     A = np.eye(n)
     b = np.array(min_vals)
     return quadprog_solve_qp(P, q, np.array(W), h, A, b)
@@ -29,8 +29,8 @@ def quadprog_solve_qp(P, q, G=None, h=None, A=None, b=None):
         qp_C = -G.T
         qp_b = -h
         meq = 0
-    print(f"G {qp_G}")
-    print(f"a {qp_a}")
-    print(f"C {qp_C}")
-    print(f"b {qp_b}")
+    #print(f"G {qp_G}")
+    #print(f"a {qp_a}")
+    #print(f"C {qp_C}")
+    #print(f"b {qp_b}")
     return quadprog.solve_qp(qp_G, qp_a, qp_C, qp_b, meq)[0]
