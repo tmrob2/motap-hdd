@@ -65,7 +65,9 @@ impl MultiObjSolver for SCPM {
                 });
                 match tnew {
                     Ok(_) => {
-                        tnew_found = true
+                        tnew_found = true;
+                        println!("solution found");
+                        println!("tnew: {:?}\n", tnew);
                     }
                     Err(_) => { println!("tnew: {:?}\n", tnew); }
                 }
