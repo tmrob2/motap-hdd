@@ -18,6 +18,7 @@ impl MultiObjSolver for SCPM {
     fn imovi_hdd_multi_object_solver(&self, eps: f64, t: &[f64], cost_step: f64, prob_step: f64)
         -> (Vec<FastHM<(i32, i32), Vec<f64>>>, FastHM<usize, Vec<f64>>) {
         let t1 = Instant::now();
+        let mut tnew = t.to_vec();
         let mut hullset: FastHM<usize, Vec<f64>> = FastHM::new();
         let mut weights : FastHM<usize, Vec<f64>> = FastHM::new();
         let mut X: FastSet<Vec<Mantissa>> = FastSet::new();
@@ -48,7 +49,6 @@ impl MultiObjSolver for SCPM {
             qp_w_input.push(w.to_vec());
             qp_x_input.push(r.to_vec());
             let mut tnew_found = false;
-            let mut tnew = t.to_vec();
             while !tnew_found {
                 for i in 0..self.num_agents {
                     tnew[i] -= cost_step;
@@ -72,7 +72,7 @@ impl MultiObjSolver for SCPM {
                     Err(_) => { println!("tnew: {:?}\n", tnew); }
                 }
             }
-            return (schedulers, hullset)
+            //return (schedulers, hullset)
         }
         X.insert(r.iter()
             .cloned()
@@ -95,7 +95,7 @@ impl MultiObjSolver for SCPM {
         let mut w: Vec<f64> = vec![0.; tot_objs];
         let mut count: usize = 1;
         while lpvalid {
-            let gurobi_result = self.gurobi_solver(&hullset, &t[..], &tot_objs);
+            let gurobi_result = self.gurobi_solver(&hullset, &tnew[..], &tot_objs);
             if w.len() <= 10 {
                 println!("gurobi result: {:.3?}", gurobi_result);
             }
