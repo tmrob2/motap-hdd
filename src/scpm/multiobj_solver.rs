@@ -132,20 +132,21 @@ impl MultiObjSolver for SCPM {
                                 pyo3::prepare_freethreaded_python();
                                 let code = include_str!(concat!(env!("CARGO_MANIFEST_DIR"),"/quadratic_program/qp.py"));
                                 // Construct a weight matrix in a way that numpy can interpret which is Vec<Vec<f64>>
-                                let mut qp_w_input: Vec<Vec<f64>> = Vec::new();
-                                let mut qp_x_input: Vec<Vec<f64>> = Vec::new();
-                                for k in 0..weights.len() {
-                                    qp_w_input.push(weights.get(&k).unwrap().to_vec());
-                                    qp_x_input.push(hullset.get(&k).unwrap().to_vec());
+                                let mut target_min: Vec<f64> = vec![0.; tot_objs];
+                                for i in 0..self.num_agents {
+                                    target_min[i] = t[i] - cost_step;
                                 }
-                                Python::with_gil(|py| -> PyResult<()> {
+                                for j in self.num_agents..tot_objs {
+                                    target_min[j] = t[j] - prob_step;
+                                }
+                                let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
                                     let qp = PyModule::from_code(py, code, "", "")?;
                                     let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
-                                        .call1((qp_w_input, qp_x_input, 1, self.num_agents + self.num_tasks, t.to_vec(), ))?
+                                        .call1((qp_w_input, qp_x_input, weights.len() + 1, tot_objs, t.to_vec(), target_min.to_vec()))?
                                         .extract()?;
-                                    println!("new z: {:?}", result);
-                                    Ok(())
+                                    Ok(result)
                                 });
+                                println!("tnew: {:?}\n", tnew);
                                 return (schedulers, hullset)
                             }
                             // Insert the new solution
