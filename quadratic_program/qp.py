@@ -29,4 +29,8 @@ def quadprog_solve_qp(P, q, G=None, h=None, A=None, b=None):
         qp_C = -G.T
         qp_b = -h
         meq = 0
+    print(f"G {qp_G}")
+    print(f"a {qp_a}")
+    print(f"C {qp_C}")
+    print(f"b {qp_b}")
     return quadprog.solve_qp(qp_G, qp_a, qp_C, qp_b, meq)[0]
