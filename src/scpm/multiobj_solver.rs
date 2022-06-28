@@ -162,7 +162,7 @@ impl MultiObjSolver for SCPM {
                                     let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
                                         let qp = PyModule::from_code(py, code, "", "")?;
                                         let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
-                                            .call1((qp_w_input, qp_x_input, weights.len() + 1, tot_objs, tnew.to_vec(), target_min.to_vec()))?
+                                            .call1((qp_w_input.to_vec(), qp_x_input.to_vec(), weights.len() + 1, tot_objs, tnew.to_vec(), target_min.to_vec(),))?
                                             .extract()?;
                                         Ok(result)
                                     });
