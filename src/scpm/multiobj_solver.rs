@@ -61,7 +61,11 @@ impl MultiObjSolver for SCPM {
                     .extract()?;
                 Ok(result)
             });
-            println!("tnew: {:?}\n", tnew);
+            match tnew {
+                Ok(_) => {}
+                Err(_) => { println!("tnew: {:?}\n", tnew); }
+            }
+
             return (schedulers, hullset)
         }
         X.insert(r.iter()
