@@ -195,7 +195,7 @@ impl MultiObjSolver for SCPM {
                 }
             }
         }
-        if w.len() <= 10 {
+        if w.len() <= 20 {
             for ix in 0..hullset.len() {
                 println!("w: {:.3?},\n\tx: {:.1?}", weights.get(&ix).unwrap(), hullset.get(&ix).unwrap());
             }
