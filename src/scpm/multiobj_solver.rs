@@ -47,25 +47,27 @@ impl MultiObjSolver for SCPM {
             let mut qp_x_input: Vec<Vec<f64>> = Vec::new();
             qp_w_input.push(w.to_vec());
             qp_x_input.push(r.to_vec());
-            let mut target_min: Vec<f64> = vec![0.; tot_objs];
-            for i in 0..self.num_agents {
-                target_min[i] = t[i] - cost_step;
+            let mut tnew_found = false;
+            let mut tnew = t.to_vec();
+            while !tnew_found {
+                for i in 0..self.num_agents {
+                    tnew[i] -= cost_step;
+                }
+                for j in self.num_agents..tot_objs {
+                    tnew[j] -= prob_step;
+                }
+                let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
+                    let qp = PyModule::from_code(py, code, "", "")?;
+                    let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
+                        .call1((&qp_w_input, &qp_x_input, 1, tot_objs, t.to_vec(), target_min.to_vec()))?
+                        .extract()?;
+                    Ok(result)
+                });
+                match tnew {
+                    Ok(_) => {}
+                    Err(_) => { println!("tnew: {:?}\n", tnew); }
+                }
             }
-            for j in self.num_agents..tot_objs {
-                target_min[j] = t[j] - prob_step;
-            }
-            let tnew = Python::with_gil(|py| -> PyResult<Vec<f64>> {
-                let qp = PyModule::from_code(py, code, "", "")?;
-                let result: Vec<f64> = qp.getattr("quadprog_wrapper")?
-                    .call1((qp_w_input, qp_x_input, 1, tot_objs, t.to_vec(), target_min.to_vec()))?
-                    .extract()?;
-                Ok(result)
-            });
-            match tnew {
-                Ok(_) => {}
-                Err(_) => { println!("tnew: {:?}\n", tnew); }
-            }
-
             return (schedulers, hullset)
         }
         X.insert(r.iter()
